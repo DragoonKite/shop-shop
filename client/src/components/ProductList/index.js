@@ -5,19 +5,24 @@ import ProductItem from "../ProductItem";
 import { QUERY_PRODUCTS } from "../../utils/queries";
 import spinner from "../../assets/spinner.gif"
 
-import { useStoreContext } from '../../utils/GlobalState';
-import { UPDATE_PRODUCTS } from '../../utils/actions';
+//import { useStoreContext } from '../../utils/GlobalState';
+//import { UPDATE_PRODUCTS } from '../../utils/actions';
+import { updateProducts } from '../../utils/slices/productSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { idbPromise } from "../../utils/helpers";
 
 function ProductList() {
-  const [state, dispatch] = useStoreContext();
-  const {currentCategory} = state;
+  //const [state, dispatch] = useStoreContext();
+  //const {currentCategory} = state;
+  const dispatch = useDispatch();
+  const currentCategory = useSelector(state => state.currentCategory)
+  const { products } = useSelector(state => state.products)
   const { loading, data } = useQuery(QUERY_PRODUCTS);
 
   useEffect(() => {
     if(data) {
       dispatch({
-        type: UPDATE_PRODUCTS,
+        type: updateProducts,
         products: data.products
       })
 
@@ -30,7 +35,7 @@ function ProductList() {
       idbPromise('products', 'get').then((products) => {
         // use retrieved data to set global state for offline browsing
         dispatch({
-          type: UPDATE_PRODUCTS,
+          type: updateProducts,
           products: products
         });
       });
@@ -39,16 +44,16 @@ function ProductList() {
 
   function filterProducts() {
     if (!currentCategory) {
-      return state.products;
+      return products;
     }
 
-    return state.products.filter(product => product.category._id === currentCategory);
+    return products.filter(product => product.category._id === currentCategory);
   }
 
   return (
     <div className="my-2">
       <h2>Our Products:</h2>
-      {state.products.length ? (
+      {products.length ? (
         <div className="flex-row">
             {filterProducts().map(product => (
                 <ProductItem

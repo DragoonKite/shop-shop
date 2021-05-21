@@ -68,8 +68,8 @@ function Detail() {
     if (itemInCart) {
       dispatch({
         type: updateCartQuantity,
-        _id: id,
-        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1
+       payload:{ _id: id,
+        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1}
       });
       idbPromise('cart', 'put', {
         ...itemInCart,
