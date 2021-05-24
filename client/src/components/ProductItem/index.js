@@ -31,8 +31,8 @@ function ProductItem(item) {
     if (itemInCart) {
       dispatch({
         type: updateCartQuantity,
-        _id: _id,
-        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1
+        payload:{_id: _id,
+        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1}
       });
 
       idbPromise('cart', 'put', {
